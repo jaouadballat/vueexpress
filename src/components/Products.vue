@@ -6,7 +6,6 @@
 import Cards from './Cards';
 import Api from '@/config/Api'
 
-import axios from 'axios';
 export default {
     components: {
         Cards
