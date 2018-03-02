@@ -32,6 +32,7 @@ export default {
             .then(response => {
                 this.categories = response.data;
             });
+            console.log(this.cart);
             
     }, 
     computed: {

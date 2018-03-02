@@ -3,7 +3,7 @@ import Vue from 'vue'
 Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
-        cart: JSON.parse(localStorage.getItem('cart'))
+        cart: JSON.parse(localStorage.getItem('cart')) || []
     },
     mutations:{
         setCart: (state, payload) => {
@@ -14,6 +14,12 @@ export default new Vuex.Store({
                 return product.id === payload.id
             });
             item.qty = payload.qty;
+        },
+        setPrice(state, payload) {
+            let item = state.cart.find(product => {
+                return product.id === payload.id
+            });
+            item.subtotal = payload.subtotal;
         }
     },
     getters: {

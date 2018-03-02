@@ -2,20 +2,26 @@
   <div class="container">
       <div class="row">
           <div class="col-md-12">
-              <table class="table striped ">
+              <div v-if="cart.length==0">
+                  <h3 class="text-center text-danger">Your Cart is Empty !</h3>
+              </div>
+              <div v-else>
+                  <table class="table striped ">
                     <thead>
                         <tr>
                         <th scope="col">Product</th>
                         <th scope="col">Price</th>
                         <th scope="col">Quantity</th>
+                        <th scope="col">SubTotat</th>
                         <th scope="col">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="item in cart" :key="item.id">
                             <td>{{ item.name }}</td>
-                            <td>{{ item.price }}</td>
+                            <td>${{ item.price }}</td>
                             <td>{{ item.qty }}</td>
+                            <td>${{ item.subtotal }}</td>
                             <td>
                                 <button class="btn btn-sm btn-info mr-1" @click="action('min',item)">-</button>
                                 <button class="btn btn-sm btn-danger mr-1" @click="action('clear',item)">Clear</button>
@@ -24,8 +30,9 @@
                         </tr>
                     </tbody>
               </table>
-        <h4>Total:</h4> 
-        <a href="#" class="btn btn-outline-primary">Checkout</a>
+                <h4>Total: ${{ total }}</h4> 
+                <a href="#" class="btn btn-outline-primary">Checkout</a>
+              </div>
           </div>
       </div>
   </div>
@@ -33,23 +40,35 @@
 
 <script>
 export default {
-    created() {
-        console.log(this.cart);
-    },
+
     computed: {
          cart() {
              return this.$store.getters.getCart
+         },
+         total() {
+             let som = 0;
+              this.cart.map(item => {
+                 som += item.subtotal
+             });
+             return som;
          }
     },
     methods: {
         action(event, item) {
-            let price = item.price;
             switch (event) {
                 case 'add':
-                    item.qty++
+                    item.qty++;
+                    item.subtotal = item.price*item.qty;
+                    this.$store.commit('setQuantity', item);
+                    this.$store.commit('setPrice', item);
+                    localStorage.setItem('cart', JSON.stringify(this.cart));
                     break;
                 case 'min':
-                    item.qty--
+                    item.qty--;
+                    item.subtotal = item.price*item.qty;
+                    this.$store.commit('setQuantity', item);
+                    this.$store.commit('setPrice', item);
+                    localStorage.setItem('cart', JSON.stringify(this.cart));
                     if(item.qty === 0) this.clearFromCart(item)
                     break;
                 case 'clear':
@@ -63,7 +82,8 @@ export default {
             let item = this.cart.find(item => {
                 return item.id === product.id
             });
-            this.cart.splice(item, 1);
+            let index = this.cart.indexOf(item);
+            this.cart.splice(index, 1);
             localStorage.setItem('cart', JSON.stringify(this.cart));
         }
     }

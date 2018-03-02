@@ -10,7 +10,7 @@
         <p>
           {{ product.description }}
         </p>
-        <a href="#" class="btn btn-outline-primary" @click="checkout">Buy Now</a>
+        <button class="btn btn-outline-primary mb-5" @click="addToCart(product)">Buy Now</button>
       </div>
     </div>
   </div>
@@ -18,9 +18,11 @@
 
 <script>
 import Api from '@/config/Api'
+import mixins from '@/mixins/mixins'
 
 export default {
   props: ['id'],
+  mixins: [mixins],
   data(){
     return {
       product: {}
