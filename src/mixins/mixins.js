@@ -19,6 +19,7 @@ export default {
                 });
                 if (item) { // check if is not new item
                     item.qty++;
+                    this.$store.commit('setQuantity', item);
                     localStorage.setItem('cart', JSON.stringify(cart));
                 } else {
                     let item = {
