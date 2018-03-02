@@ -3,13 +3,14 @@ export default {
         addToCart(product) {
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
             if (cart.length === 0) { 
-                cart.push({
+                let item = {
                     id: product._id,
                     name: product.name,
                     price: product.price,
                     qty: 1
-                });
-
+                }
+                cart.push(item);
+                this.$store.commit('setCart', item);
                 localStorage.setItem('cart', JSON.stringify(cart));
 
             } else {
@@ -20,12 +21,14 @@ export default {
                     item.qty++;
                     localStorage.setItem('cart', JSON.stringify(cart));
                 } else {
-                    cart.push({
+                    let item = {
                         id: product._id,
                         name: product.name,
                         price: product.price,
                         qty: 1
-                    });
+                    };
+                    cart.push(item);
+                    this.$store.commit('setCart', item);
                     localStorage.setItem('cart', JSON.stringify(cart));
                 }
 
