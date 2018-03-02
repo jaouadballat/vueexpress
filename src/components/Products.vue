@@ -4,6 +4,7 @@
 
 <script>
 import Cards from './Cards';
+import Api from '@/config/Api'
 
 import axios from 'axios';
 export default {
@@ -16,7 +17,7 @@ export default {
         }
     },
     created() {
-        axios.get('http://localhost:3000/products')
+        Api().get('/products')
             .then(response => {
                 this.products = response.data;
             });
