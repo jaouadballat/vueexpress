@@ -47,10 +47,14 @@ export default {
         key: 'pk_test_lJdbCvJNKqmvme8ThPD54LKS',
         image: 'https://stripe.com/img/documentation/checkout/marketplace.png',
         locale: 'auto',
-        token: function(token) {
+        token: (token) => {
             Api().post('/charge', {stripeEmail: 'jaouad.ballat@gmail.com', stripeToken: token, total: total})
                 .then(response => {
-                    console.log(response.data);
+                    let charge = response.data;
+                     this.$store.commit('setCharge', charge);
+                     this.$router.push({name: 'thankyou'});
+                     localStorage.clear();
+                     this.$store.state.cart = [];
                 })
         }
         });
@@ -68,12 +72,16 @@ export default {
          }
     },
     methods: {
+        tankyou(e){
+            console.log(e);
+        },
         checkout(){
         this.handler.open({
                 name: 'Shopping Cart',
                 description: 'Web site for Shopping Cart',
                 amount: this.total*100
             });
+            console.log('checkout');
         },
         action(event, item) {
             switch (event) {
