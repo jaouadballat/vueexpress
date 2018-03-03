@@ -6,7 +6,7 @@
                   <h3 class="text-center text-danger">Your Cart is Empty !</h3>
               </div>
               <div v-else>
-                  <table class="table striped ">
+                  <table class="table stripped ">
                     <thead>
                         <tr>
                         <th scope="col">Product</th>
@@ -31,7 +31,7 @@
                     </tbody>
               </table>
                 <h4>Total: ${{ total }}</h4> 
-                <a href="#" class="btn btn-outline-primary">Checkout</a>
+                <button id="checkout" class="btn btn-outline-primary" @click="checkout">Checkout</button>
               </div>
           </div>
       </div>
@@ -39,8 +39,22 @@
 </template>
 
 <script>
+import Api from '@/config/Api'
 export default {
-
+    mounted() {
+        let total = this.total;
+        this.handler = StripeCheckout.configure({
+        key: 'pk_test_lJdbCvJNKqmvme8ThPD54LKS',
+        image: 'https://stripe.com/img/documentation/checkout/marketplace.png',
+        locale: 'auto',
+        token: function(token) {
+            Api().post('/charge', {stripeEmail: 'jaouad.ballat@gmail.com', stripeToken: token, total: total})
+                .then(response => {
+                    console.log(response.data);
+                })
+        }
+        });
+    },
     computed: {
          cart() {
              return this.$store.getters.getCart
@@ -54,6 +68,13 @@ export default {
          }
     },
     methods: {
+        checkout(){
+        this.handler.open({
+                name: 'Shopping Cart',
+                description: 'Web site for Shopping Cart',
+                amount: this.total*100
+            });
+        },
         action(event, item) {
             switch (event) {
                 case 'add':
