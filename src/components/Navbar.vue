@@ -20,7 +20,6 @@
 
 <script>
 import Api from '@/config/Api'
-import mapGetters from 'vuex'
 export default {
     data() {
         return {

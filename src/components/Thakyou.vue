@@ -1,13 +1,16 @@
 <template>
-  <div>
-      <p>Tank you</p>
+  <div class="text-center">
+      <p class="text-danger mt-5">You will recieve an Email on {{ email }} soon, Thank you !</p>
+      <router-link tag="a" :to="{name: 'home'}" class="btn btn-outline-primary">Back to Web site</router-link>
   </div>
 </template>
 
 <script>
 export default {
-    created() {
-        console.log(this.$store.getters.getCharge);
+    computed: {
+        email() {
+            return this.$store.getters.getCharge.email;
+        }
     }
 }
 </script>

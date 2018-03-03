@@ -40,15 +40,17 @@
 
 <script>
 import Api from '@/config/Api'
+import key from '@/config/stripeKey'
+
 export default {
     mounted() {
         let total = this.total;
         this.handler = StripeCheckout.configure({
-        key: 'pk_test_lJdbCvJNKqmvme8ThPD54LKS',
+        key: key.PUBLISHABLE_KEY,
         image: 'https://stripe.com/img/documentation/checkout/marketplace.png',
         locale: 'auto',
         token: (token) => {
-            Api().post('/charge', {stripeEmail: 'jaouad.ballat@gmail.com', stripeToken: token, total: total})
+            Api().post('/charge', {stripeToken: token, total: total})
                 .then(response => {
                     let charge = response.data;
                      this.$store.commit('setCharge', charge);
@@ -72,16 +74,12 @@ export default {
          }
     },
     methods: {
-        tankyou(e){
-            console.log(e);
-        },
         checkout(){
         this.handler.open({
                 name: 'Shopping Cart',
                 description: 'Web site for Shopping Cart',
                 amount: this.total*100
             });
-            console.log('checkout');
         },
         action(event, item) {
             switch (event) {
